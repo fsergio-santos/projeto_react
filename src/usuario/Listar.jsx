@@ -45,22 +45,14 @@ class ListaUsuario extends Component {
     this.setState({
       props:props,
       dir:dir 
-    })
-    this.loadData();
+    }, () => this.loadData())
   }
-
-  atualiza(){
-    console.log(this.state.paginaAtual);
-    this.loadData();
-  }
-
+ 
   setNumberPaginaAtual = (page) => {
     console.log(page)
-    // this.setState({
-    //   paginaAtual:page
-    // }, this.atualiza() )
-    this.state.paginaAtual = page;
-    this.loadData()
+    this.setState({
+      paginaAtual:page
+    }, () => this.loadData() )
   }
 
 
@@ -83,8 +75,9 @@ class ListaUsuario extends Component {
   } 
 
   setPageSize = ( size ) => {
-    this.state.pageSize = size; 
-    this.loadData()
+    this.setState({
+      pageSize:size
+    }, () => this.loadData() ) 
   }
 
 
