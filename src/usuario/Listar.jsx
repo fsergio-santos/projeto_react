@@ -49,7 +49,6 @@ class ListaUsuario extends Component {
   }
  
   setNumberPaginaAtual = (page) => {
-    console.log(page)
     this.setState({
       paginaAtual:page
     }, () => this.loadData() )

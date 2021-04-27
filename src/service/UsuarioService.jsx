@@ -30,3 +30,13 @@ export const findUserByName = async (nome, paginaAtual, pageSize, dir, props) =>
         })
     )
 }
+
+
+export const findUserById = async ( id ) => {
+    return (
+        http.get(`/usuario/buscar/${id}`)
+            .then( (res) => {
+                return res.data;
+            })
+    )
+}
