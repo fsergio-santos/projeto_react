@@ -51,7 +51,7 @@ const Paginacao = ({
               <p>
                 Mostrando {pageSize * paginaAtual + 1}{" "}
                 <span class="badge badge-secondary"></span>
-                de {Math.ceil(totalCount / pageSize)}{" "}
+                de {Math.ceil(totalCount / pageSize)}{" "} Páginas {" "}
                 <span className="badge badge-secondary"></span>
                 de {totalCount} <span className="badge"></span>
                 Registros Cadastrados.
@@ -65,7 +65,7 @@ const Paginacao = ({
                   paginaAtual === 1 ? "page-item disabled" : "page-item"
                 }
               >
-                <Link onClick={() => getPage(1)} className="page-link">
+                <Link onClick={() => getPage(0)} className="page-link">
                   Primeira
                 </Link>
               </li>

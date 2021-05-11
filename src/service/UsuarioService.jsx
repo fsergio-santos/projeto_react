@@ -40,3 +40,35 @@ export const findUserById = async ( id ) => {
             })
     )
 }
+
+
+export const createUser = async (usuario) => {
+    return (
+        http({
+            method:'post',
+            url:'/usuario/inserir',
+            data:usuario,
+            headers:{
+                'Content-Type':'application/json',
+            }
+        }).then(res => {
+            return res.data;
+        })
+    )
+}
+
+export const updateUser = async (usuario) => {
+    console.log(" gravando no serviço >>>>>>>>>>>>>>>>>")
+    return (
+        http({
+            method:'post',
+            url:'/usuario/alterar',
+            data:usuario,
+            headers:{
+                'Content-Type':'application/json',
+            }
+        }).then(res => {
+            return res.data;
+        })
+    )
+}
