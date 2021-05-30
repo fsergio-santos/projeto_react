@@ -1,6 +1,7 @@
 import http from "../util/Banco";
 
 export const findAllDepartamentos = async () => {
+
     return (
         http.get("/departamento/listar")
             .then( (res) => {

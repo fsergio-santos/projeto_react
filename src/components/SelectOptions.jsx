@@ -17,7 +17,7 @@ const SelectOptions = ({ sizePage, setPageSize }) => {
       <div className="col-md-6">
         <div className="form-group row">
           <label
-            for="pageSizeSelect"
+            htmlFor="pageSizeSelect"
             className="col-form-label col-12 col-sm-1"
           >
             <b>Mostrar:</b>

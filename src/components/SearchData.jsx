@@ -18,7 +18,7 @@ const SearchData = ( {buscarDataPorNome} ) => {
           <div className="form-group offset-md-1">
             <div className="row">
               <label
-                for="nome"
+                htmlFor="nome"
                 className="col-form-label col-12 col-sm-1 col-md-1"
               >
                 Nome:

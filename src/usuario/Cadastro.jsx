@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Cabecalho from "../components/templates/Cabecalho";
+import Validacao from "../components/Validacao";
 import {
   findAllDepartamentos,
   findDepartamentoByName,
@@ -11,7 +12,7 @@ import {
   createUser,
   updateUser,
 } from "../service/UsuarioService";
-import { validarUsuario } from "../validar/validarUsuario";
+import { validarUsuario, validUserFromSever } from "../validar/validarUsuario";
 import CadastrarRoles from "./CadastrarRoles";
 
 class CadastroUsuario extends Component {
@@ -43,6 +44,9 @@ class CadastroUsuario extends Component {
     showDropdown: false,
     search: "",
     selectedIndex: "",
+
+    mensagem:[],
+    showMensagem:false,
 
     formValidation : {
       username:[],
@@ -164,16 +168,15 @@ class CadastroUsuario extends Component {
   }
 
   changeSelectedDepartamento = (item, index) => {
-    this.setState(
-      {
+    console.log(item)
+    this.setState({
         selectedValue: item,
         value: item,
         selectedIndex: index,
         search: "",
         departamento: item,
-      },
-      this.showDropdown()
-    );
+      });
+      this.showDropdown();
   };
 
   onChange = (e) => {
@@ -208,15 +211,17 @@ class CadastroUsuario extends Component {
   handleSubmitUsuario = (e) => {
     e.preventDefault();
 
-    if (this.validarUsuario() === false) {
+    //if (this.validarUsuario() === false) {
       this.salvarUsuario();
-    }
+   // }
 
     
     
   };
 
-  salvarUsuario = () => {
+  async salvarUsuario() {
+    let toReturn = false;
+
     const {
       id,
       username,
@@ -227,6 +232,8 @@ class CadastroUsuario extends Component {
       roles,
       foto,
       contentType,
+      mensagem,
+      
     } = this.state;
 
     let usuario = {
@@ -246,7 +253,7 @@ class CadastroUsuario extends Component {
       usuario.email = email;
       usuario.password = password;
       usuario.confirmPassword = confirmPassword;
-      usuario.departamento = departamento;
+      usuario.departamento = departamento === "" ? {id:undefined} : departamento;
       usuario.foto = foto;
       usuario.contentType = contentType;
 
@@ -259,8 +266,29 @@ class CadastroUsuario extends Component {
         }
       }
 
-      createUser(usuario);
-      
+     const data = await createUser(usuario);
+
+     if ( data.status === 400 ) {
+          const state = validUserFromSever( this.state, data );
+          toReturn = state.toReturn;
+          this.setState({
+            toReturn:toReturn,
+            formValidation: state.formValidation,
+          })
+     } 
+
+     if ( data.status > 400 ){
+          toReturn = true;
+          mensagem.push(data.data.detail);
+          mensagem.push(data.data.title);
+          this.setState({
+              mensagem:mensagem,
+              showMensagem:true,
+          })
+
+     }
+
+     
     } else {
       usuario.id = id;
       usuario.username = username;
@@ -280,14 +308,34 @@ class CadastroUsuario extends Component {
         }
       }
 
-      updateUser(usuario);
+      const data = updateUser(usuario);
+      if ( data.status === 400 ) {
+            const state = validUserFromSever( this.state, data );
+            toReturn = state.toReturn;
+            this.setState({
+              toReturn:toReturn,
+              formValidation: state.formValidation,
+            })
+      } 
+
+      if ( data.status > 400 ){
+            toReturn = true;
+            mensagem.push(data.data.detail);
+            mensagem.push(data.data.title);
+            this.setState({
+                mensagem:mensagem,
+                showMensagem:true,
+            })
+
+      }
     }
 
-    this.setState({
-      state: this.initState,
-    });
-
-    this.props.history.push("/usuario/listar");
+    if ( toReturn === false ) {
+      this.setState({
+        state: this.initState,
+      });
+      this.props.history.push("/usuario/listar");
+    }   
   };
 
   cadastrarRoles(e) {
@@ -306,6 +354,16 @@ class CadastroUsuario extends Component {
     });
   };
 
+  
+  showMensagem(){
+    this.setState({
+      showMensagem: !this.state.showMensagem,
+      mensagem:[],
+    })
+  }
+
+
+
   render() {
     //const { id } = this.props.match.params;
     const {
@@ -321,6 +379,8 @@ class CadastroUsuario extends Component {
       search,
       departamentos,
       formValidation,
+      showMensagem,
+      mensagem,
     } = this.state;
     return (
       <section>
@@ -332,7 +392,14 @@ class CadastroUsuario extends Component {
           />
           <div className="tile">
             <div className="tile-body">
-              <form onSubmit={this.handleSubmitUsuario} id="formUsuario" className="was-validated" noValidate>
+              <form onSubmit={this.handleSubmitUsuario} id="formUsuario">
+                { showMensagem && (
+                  <div className="row">
+                    <div className="col-xs-12 col-sm-12 col-md-12">
+                        <Validacao mensagem={mensagem} error={true} showAlert={this.showMensagem.bind(this)}/>
+                    </div>
+                  </div> 
+                )}
                 <div className="row">
                   <div className="col-sm-4">
                     <div className="row">
@@ -357,7 +424,7 @@ class CadastroUsuario extends Component {
                                 className="form-control hide btn-responsive"
                               />
                               <div style={{ textAlign: "center" }}>
-                                <label for="fileInput">
+                                <label htmlFor="fileInput">
                                   {" "}
                                   <i className="fa fa-upload fa-lg"></i>
                                 </label>
@@ -370,7 +437,7 @@ class CadastroUsuario extends Component {
                                 className="form-control hide btn-responsive"
                               />
                               <div style={{ textAlign: "center" }}>
-                                <label for="fileExcluir">
+                                <label htmlFor="fileExcluir">
                                   <i className="fa fa-trash fa-lg"></i>
                                 </label>
                               </div>
@@ -515,11 +582,7 @@ class CadastroUsuario extends Component {
                       <div className="col-xs-12 col-sm-12 col-md-12">
                         <div className="form-group">
                           <label className="control-label">Departamento:</label>
-                          <div className={
-                                formValidation.validSelect === true 
-                                   ? "menu_dropdown_selected form-control is-invalid" 
-                                   : "menu_dropdown_selected form-control"
-                            }>
+                          <div className="menu_dropdown">
                             <input
                               type="hidden"
                               value={value}
@@ -527,7 +590,10 @@ class CadastroUsuario extends Component {
                             />
                           </div>
                           <div
-                            className="menu_dropdown_selected form-control"
+                            className={ formValidation.validSelect === true 
+                              ? "menu_dropdown_selected form-control is-invalid"
+                              : "menu_dropdown_selected form-control"
+                            }
                             onClick={() => this.showDropdown()}
                           >
                             {selectedValue.nome
@@ -585,10 +651,6 @@ class CadastroUsuario extends Component {
                               </div>
                             </div>
                           )}
-
-                          <div className="invalid-feedback">
-                            <span></span>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -597,18 +659,18 @@ class CadastroUsuario extends Component {
 
                 <input type="hidden" id="id" name="id" value="" />
                 <div className="tile-footer">
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-primary ml-2">
                     Salvar
                   </button>
                   <button
                     type="button"
-                    className="btn btn-warning"
+                    className="btn btn-warning ml-2"
                     id="btnModal"
                     onClick={(e) => this.cadastrarRoles(e)}
                   >
                     Cadastro de Roles
                   </button>
-                  <Link to={"/usuario/listar"} className="btn btn-warning">
+                  <Link to={"/usuario/listar"} className="btn btn-secondary ml-2">
                     Cancelar
                   </Link>
                 </div>

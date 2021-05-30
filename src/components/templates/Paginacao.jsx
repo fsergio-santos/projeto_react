@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const MAX_ITENS = 10;
@@ -46,11 +46,11 @@ const Paginacao = ({
     <React.Fragment>
       <div className="box-footer clearfix">
         <div className="row">
-          <div className="col-xs-12 col-md-5">
+          <div className="col-xs-12 col-sm-12 col-md-5">
             <div className="pagination">
               <p>
                 Mostrando {pageSize * paginaAtual + 1}{" "}
-                <span class="badge badge-secondary"></span>
+                <span className="badge badge-secondary"></span>
                 de {Math.ceil(totalCount / pageSize)}{" "} Páginas {" "}
                 <span className="badge badge-secondary"></span>
                 de {totalCount} <span className="badge"></span>
@@ -58,14 +58,14 @@ const Paginacao = ({
               </p>
             </div>
           </div>
-          <div className="col-xs-12 col-md-7">
+          <div className="col-xs-12 col-sm-12 col-md-7">
             <ul className="pagination pull-right">
               <li
                 className={
                   paginaAtual === 1 ? "page-item disabled" : "page-item"
                 }
               >
-                <Link onClick={() => getPage(0)} className="page-link">
+                <Link onClick={() => getPage(0)} className="page-link" to="#">
                   Primeira
                 </Link>
               </li>
@@ -76,7 +76,7 @@ const Paginacao = ({
               >
                 <Link
                   onClick={() => getPage(paginaAtual - 1)}
-                  className="page-link"
+                  className="page-link" to="#"
                 >
                   <span className="fa fa-chevron-left"></span>
                 </Link>
@@ -88,7 +88,7 @@ const Paginacao = ({
                     paginaAtual === pagina ? "page-item active" : "page-item"
                   }
                 >
-                  <Link onClick={() => getPage(pagina)} className="page-link">
+                  <Link onClick={() => getPage(pagina)} className="page-link" to="#">
                     {pagina}
                   </Link>
                 </li>
@@ -98,8 +98,8 @@ const Paginacao = ({
                   paginaAtual === paginaFim ? "page-item disabled" : "page-link"
                 }
               >
-                <Link onClick={() => getPage(paginaAtual + 1)}>
-                  <span class="fa fa-chevron-right"></span>
+                <Link onClick={() => getPage(paginaAtual + 1)} to="#">
+                  <span className="fa fa-chevron-right"></span>
                 </Link>
               </li>
               <li
@@ -109,7 +109,7 @@ const Paginacao = ({
               >
                 <Link
                   onClick={() => getPage(paginaFim - 1)}
-                  className="page-link"
+                  className="page-link" to="#"
                 >
                   Última
                 </Link>

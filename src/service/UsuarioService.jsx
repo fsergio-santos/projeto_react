@@ -37,6 +37,8 @@ export const findUserById = async ( id ) => {
         http.get(`/usuario/buscar/${id}`)
             .then( (res) => {
                 return res.data;
+            }).catch(error => {
+                return error.response
             })
     )
 }
@@ -53,12 +55,13 @@ export const createUser = async (usuario) => {
             }
         }).then(res => {
             return res.data;
+        }).catch(error => {
+            return error.response
         })
     )
 }
 
 export const updateUser = async (usuario) => {
-    console.log(" gravando no serviço >>>>>>>>>>>>>>>>>")
     return (
         http({
             method:'post',
@@ -69,6 +72,8 @@ export const updateUser = async (usuario) => {
             }
         }).then(res => {
             return res.data;
+        }).catch(error => {
+            return error.response
         })
     )
 }

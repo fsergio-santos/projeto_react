@@ -2,8 +2,6 @@ const VALID_EMAIL = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+"
 
 export const validarUsuario = (state) => {
 
-    console.log("na função de validação >>>>>>>>>>>>>>>>>>>>")
-
     let { username, email, password, confirmPassword, departamento, roles, formValidation, toReturn } = state;
 
     if ( username.trim().length === 0){
@@ -87,7 +85,7 @@ export const validarUsuario = (state) => {
         toReturn = true;
     }
 
-    if ( departamento.trim().length === 0 ){
+    if ( departamento === "" ){
         formValidation.departamento.push("O Departamento deve ser informado  ");
         formValidation.validSelect = true; 
         toReturn = true;
@@ -114,3 +112,49 @@ export const validarUsuario = (state) => {
     return state;
 
 }
+
+
+export const validUserFromSever = (state, data ) => {
+
+    let { toReturn, formValidation } = state;
+
+    for ( let i = 0 ; i < data.data.fields.length; i++ ){
+    
+        if ( data.data.fields[i].nome === "username") {
+            formValidation.username.push(data.data.fields[i].userMessage);
+            formValidation.validUserName = true; 
+            toReturn = true;  
+        } 
+
+        if ( data.data.fields[i].nome === "password") {
+            formValidation.password.push(data.data.fields[i].userMessage);
+            formValidation.validPassword = true; 
+            toReturn = true;
+        }
+
+        if ( data.data.fields[i].nome === "email") {
+            formValidation.email.push(data.data.fields[i].userMessage);
+            formValidation.validEmail = true; 
+            toReturn = true;
+        }
+
+        if ( data.data.fields[i].nome === "confirmPassword") {
+            formValidation.confirmPassword.push(data.data.fields[i].userMessage);
+            formValidation.validConfirmPassword = true; 
+            toReturn = true;
+        }
+
+        if ( data.data.fields[i].nome === "roles") {
+            formValidation.roles.push(data.data.fields[i].userMessage);
+            formValidation.validRoles = true; 
+            toReturn = true;
+        }
+
+    }
+
+    state = { toReturn, formValidation };
+
+    return state;
+}    
+
+
