@@ -2,6 +2,7 @@ import React from "react";
 
 import MensagemErro from "../components/templates/MensagemErro";
 import { findUserByEmail } from "../service/LoginService";
+import { setUsuario } from "../util/Token";
 
 class Login extends React.Component {
   
@@ -21,42 +22,48 @@ class Login extends React.Component {
 
             validEmail:false,
             validPassword:false,
-        }
+        },
+
     })
 
     
     onChange = (e) => {
-        console.log(e.target.name)
-        console.log(e.target.value)
         const { name, value } = e.target;
         this.setState({
             [name]:value
         })
-        console.log(this.state.username)
     }
 
  
-     onLogin(e){
+    async onLogin(e){
+        
         let usuario = undefined; 
         e.preventDefault(); 
         const { email, password } = this.state;
-        findUserByEmail(email, password)
-            .then( res => {
-               usuario = res.data
-               localStorage.setItem(res.data.token);
-            })
-            .catch( error => {
-                console.log(error.response)
-            })
+        usuario = await findUserByEmail(email, password);
 
+        console.log(usuario);
+
+        setUsuario(usuario);
+        
+        this.props.history.push("/usuario/listar");
+        
      }
+
+
+     showMensagem(){
+        this.setState({
+          showMensagem: !this.state.showMensagem,
+          mensagem:[],
+        })
+      }
 
     render() { 
         const { email, password, formValidation } = this.state;
         return ( 
            <React.Fragment>
              <section className="login-content">
-                <div className="logo">
+               <div className="logo">
                      <h1>Financeiro</h1>
                 </div>
                 <div className="login-box">
@@ -75,7 +82,7 @@ class Login extends React.Component {
                                 className={
                                     formValidation.validEmail === true 
                                        ? "form-control is-invalid" 
-                                       :  "form-control"
+                                       : "form-control"
                                 }/>
                                 <MensagemErro error={formValidation.validEmail} message={formValidation.email}/>
                         </div>
@@ -91,7 +98,7 @@ class Login extends React.Component {
                                 className={
                                     formValidation.validPassword === true 
                                        ? "form-control is-invalid" 
-                                       :  "form-control"
+                                       : "form-control"
                                 }/>
                               <MensagemErro error={formValidation.validPassword} message={formValidation.password}/>
                         </div>
@@ -107,7 +114,7 @@ class Login extends React.Component {
                         </div>
                         <div className="form-group btn-container">
                             <button className="btn btn-primary btn-block"
-                                onClick={(e) => this.onLogin(e).bind(this)}>
+                                onClick={(e) => this.onLogin(e)}>
                                 <i className="fa fa-sign-in fa-lg fa-fw"></i>Acessar
                             </button>
                         </div>

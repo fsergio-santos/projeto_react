@@ -2,8 +2,8 @@ import http from '../util/Banco';
 
 export const findUserByEmail = async ( email, password ) => {
     let login ={
-        email:email,
-        password:password,
+        email,
+        password,
     };
     return (
         http({
@@ -14,9 +14,9 @@ export const findUserByEmail = async ( email, password ) => {
                 'Content-Type':'application/json'
             }
         }).then( res => {
-            return res;
+            return res.data;
         }).catch( error => {
-            return error;
+            return error.response;
         })
     )
 

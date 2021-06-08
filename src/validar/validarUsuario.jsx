@@ -104,8 +104,6 @@ export const validarUsuario = (state) => {
         formValidation.validRoles = true;
         toReturn = true;
     }
-
-    console.log(toReturn)
   
     state = { toReturn, formValidation } 
     

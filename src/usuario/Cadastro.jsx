@@ -12,8 +12,10 @@ import {
   createUser,
   updateUser,
 } from "../service/UsuarioService";
-import { validarUsuario, validUserFromSever } from "../validar/validarUsuario";
+import { validarUsuario, validUserFromSever } from "../validar/ValidarUsuario";
 import CadastrarRoles from "./CadastrarRoles";
+import MensagemErro from "../components/templates/MensagemErro";
+
 
 class CadastroUsuario extends Component {
   constructor(props) {
@@ -48,6 +50,11 @@ class CadastroUsuario extends Component {
     mensagem:[],
     showMensagem:false,
 
+    paginaAtual:0,
+    pageSize:15,
+    dir:"asc",
+    props:"id",
+
     formValidation : {
       username:[],
       email:[],
@@ -74,6 +81,7 @@ class CadastroUsuario extends Component {
   }
 
   async loadData(id) {
+    const { paginaAtual, pageSize, dir, props } = this.state;
     let usuario = undefined;
     let roles = [];
     let departamentos = [];
@@ -91,10 +99,7 @@ class CadastroUsuario extends Component {
       });
     }
 
-    const paginaAtual = 0;
-    const pageSize = 15;
-    const dir = "asc";
-    const props = "id";
+   
 
     const data_roles = await findAllRoles(paginaAtual, pageSize, dir, props);
 
@@ -187,7 +192,6 @@ class CadastroUsuario extends Component {
   };
 
   validarUsuario() {
-
    
    let { toReturn, formValidation } = this.state;
 
@@ -197,26 +201,18 @@ class CadastroUsuario extends Component {
 
    toReturn = state.toReturn; 
 
-   console.log(formValidation); 
-
    this.setState({
        formValidation:formValidation,
    })
-
-   console.log(this.state.formValidation);
 
    return toReturn;
   }
 
   handleSubmitUsuario = (e) => {
     e.preventDefault();
-
-    //if (this.validarUsuario() === false) {
+    if (this.validarUsuario() === false) {
       this.salvarUsuario();
-   // }
-
-    
-    
+    }
   };
 
   async salvarUsuario() {
@@ -396,7 +392,7 @@ class CadastroUsuario extends Component {
                 { showMensagem && (
                   <div className="row">
                     <div className="col-xs-12 col-sm-12 col-md-12">
-                        <Validacao mensagem={mensagem} error={true} showAlert={this.showMensagem.bind(this)}/>
+                        <Validacao mensagem={mensagem} error={showMensagem} showAlert={this.showMensagem.bind(this)}/>
                     </div>
                   </div> 
                 )}
@@ -464,19 +460,7 @@ class CadastroUsuario extends Component {
                                    :  "form-control"
                             }
                           />
-                          { formValidation.validUserName && (
-                            <div className="invalid-feedback">
-                              {
-                                formValidation.username.map((erro, index )=>{
-                                  return (
-                                    <p key={index} style={{ margin: "0" }}>
-                                          <span>{ erro }</span>
-                                    </p>
-                                  )
-                                })
-                              }
-                            </div>
-                          )}
+                          <MensagemErro error={formValidation.validUserNome} mensagem={formValidation.username}/>
                         </div>
                       </div>
                     </div>
@@ -496,19 +480,7 @@ class CadastroUsuario extends Component {
                                  : "form-control"
                             }
                           />
-                          { formValidation.validEmail && (
-                            <div className="invalid-feedback">
-                              {
-                                formValidation.email.map((erro, index )=>{
-                                  return (
-                                    <p key={index} style={{ margin: "0" }}>
-                                          <span>{ erro }</span>
-                                    </p>
-                                  )
-                                })
-                              }
-                            </div>
-                          )}
+                         <MensagemErro error={formValidation.validEmail} mensagem={formValidation.email}/> 
                         </div>
                       </div>
                     </div>
@@ -528,19 +500,7 @@ class CadastroUsuario extends Component {
                                  : "form-control"
                             }
                           />
-                          { formValidation.validPassword && (
-                            <div className="invalid-feedback">
-                              {
-                                formValidation.password.map((erro, index )=>{
-                                  return (
-                                    <p key={index} style={{ margin: "0" }}>
-                                          <span>{ erro }</span>
-                                    </p>
-                                  )
-                                })
-                              }
-                            </div>
-                          )}
+                          <MensagemErro error={formValidation.validPassword} mensagem={formValidation.password}/>
                         </div>
                       </div>
                     </div>
@@ -562,19 +522,7 @@ class CadastroUsuario extends Component {
                                  : "form-control"
                             }
                           />
-                          { formValidation.validConfirmPassword && (
-                            <div className="invalid-feedback">
-                              {
-                                formValidation.confirmPassword.map((erro, index )=>{
-                                  return (
-                                    <p key={index} style={{ margin: "0" }}>
-                                          <span>{ erro }</span>
-                                    </p>
-                                  )
-                                })
-                              }
-                            </div>
-                          )}
+                          <MensagemErro error={formValidation.validConfirmPassword} mensagem={formValidation.confirmPassword}/>
                         </div>
                       </div>
                     </div>
@@ -600,19 +548,7 @@ class CadastroUsuario extends Component {
                               ? selectedValue.nome
                               : "Selecione uma opção "}
                           </div>
-                          { formValidation.validSelect && (
-                            <div className="invalid-feedback">
-                              {
-                                formValidation.departamento.map((erro, index )=>{
-                                  return (
-                                    <p key={index} style={{ margin: "0" }}>
-                                          <span>{ erro }</span>
-                                    </p>
-                                  )
-                                })
-                              }
-                            </div>
-                          )}  
+                          <MensagemErro error={formValidation.validSelect} mensagem={formValidation.departamento}/>
                           {showDropdown && (
                             <div className="menu_dropdown_menu">
                               <input

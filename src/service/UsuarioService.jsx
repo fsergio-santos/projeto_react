@@ -1,10 +1,18 @@
 import http from "../util/Banco";
+import { getToken } from "../util/Token";
+
 
 export const findAllUsers = async (paginaAtual, pageSize, dir, props) => {
     return (
-        http.get(`/usuario/listar?paginaAtual=${paginaAtual}&pageSize=${pageSize}&dir=${dir}&props=${props}`)
-            .then( (res) => {
-                return res.data
+        http.get('/usuario/listar',{
+            headers:{
+                Authorization: `Bearer ${getToken()}`
+            },
+        }).then( (res) => {
+            return res.data
+        }).catch( (error ) => {
+            console.log(error.response);
+            return error.response;
         })
     )
 }
@@ -12,10 +20,10 @@ export const findAllUsers = async (paginaAtual, pageSize, dir, props) => {
 
 export const findUserByName = async (nome, paginaAtual, pageSize, dir, props) => {
     let data = {
-        paginaAtual:paginaAtual,
-        pageSize:pageSize,
-        dir:dir,
-        props:props,
+        paginaAtual,
+        pageSize,
+        dir,
+        props,
     }
     return (
         http({
@@ -25,9 +33,12 @@ export const findUserByName = async (nome, paginaAtual, pageSize, dir, props) =>
             headers : {
                 'Content-type':'application/json'
             },
+            
        }).then(res=>{
             return  res.data
-        })
+       }).catch(error => {
+            return error.response
+       })
     )
 }
 

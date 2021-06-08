@@ -58,20 +58,16 @@ class ListaUsuario extends Component {
   async loadData(){
 
     const { paginaAtual, pageSize, dir, props } = this.state
-    try {
-        const res = await findAllUsers(paginaAtual, pageSize, dir, props);
-        this.setState({
-          usuarios:res.content,
-          paginaAtual:res.number,
-          pageSize:res.size,
-          totalCount:res.totalElements,
-          paginaFim:res.totalPages,
-          dir:dir
-        })
-    } catch( erro ){
-      console.log(erro);
-    }
-  } 
+    const res = await findAllUsers(paginaAtual, pageSize, dir, props);
+    this.setState({
+       usuarios:res.content,
+       paginaAtual:res.number,
+       pageSize:res.size,
+       totalCount:res.totalElements,
+       paginaFim:res.totalPages,
+       dir:dir
+     })
+    } 
 
   setPageSize = ( size ) => {
     this.setState({
