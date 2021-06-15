@@ -6,6 +6,7 @@ import Cabecalho  from "../components/templates/Cabecalho";
 import TableHeader from "../components/TableHeader";
 import { findAllUsers, findUserByName } from "../service/UsuarioService";
 import Paginacao from "../components/templates/Paginacao";
+import Nav from "../components/templates/Nav";
 
 
 const headers = [
@@ -98,6 +99,7 @@ class ListaUsuario extends Component {
     return (
       <Fragment>
         <section>
+          <Nav/>
           <div className="container">
 
             <Cabecalho path="/" tituloPagina="Listagem de Usuários" tituloPesquisa="Menu Principal"/>

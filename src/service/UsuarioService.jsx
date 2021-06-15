@@ -31,7 +31,8 @@ export const findUserByName = async (nome, paginaAtual, pageSize, dir, props) =>
             url : `/usuario/listar/${nome}`,
             data:data,
             headers : {
-                'Content-type':'application/json'
+                'Content-type':'application/json',
+                Authorization: `Bearer ${getToken()}`
             },
             
        }).then(res=>{
@@ -45,12 +46,15 @@ export const findUserByName = async (nome, paginaAtual, pageSize, dir, props) =>
 
 export const findUserById = async ( id ) => {
     return (
-        http.get(`/usuario/buscar/${id}`)
-            .then( (res) => {
-                return res.data;
-            }).catch(error => {
-                return error.response
-            })
+        http.get(`/usuario/buscar/${id}`,{
+            headers:{
+                Authorization: `Bearer ${getToken()}`
+            },
+        }).then( (res) => {
+           return res.data;
+        }).catch(error => {
+           return error.response
+        })
     )
 }
 
@@ -63,6 +67,7 @@ export const createUser = async (usuario) => {
             data:usuario,
             headers:{
                 'Content-Type':'application/json',
+                Authorization: `Bearer ${getToken()}`
             }
         }).then(res => {
             return res.data;
@@ -80,6 +85,7 @@ export const updateUser = async (usuario) => {
             data:usuario,
             headers:{
                 'Content-Type':'application/json',
+                Authorization: `Bearer ${getToken()}`
             }
         }).then(res => {
             return res.data;

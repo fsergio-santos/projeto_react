@@ -14,9 +14,11 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
             <Route path="/" exact component={Login}/>
-            <Route path="/usuario/listar" exact component={ListaUsuario}/>
-            <Route path="/usuario/incluir" exact component={CadastroUsuario}/>
-            <Route path="/usuario/alterar/:id" exact component={CadastroUsuario}/>
+            <div className="app-content">
+              <Route path="/usuario/listar" exact component={ListaUsuario}/>
+              <Route path="/usuario/incluir" exact component={CadastroUsuario}/>
+              <Route path="/usuario/alterar/:id" exact component={CadastroUsuario}/>
+            </div>
         </Switch>
       </BrowserRouter>
     );

@@ -13,8 +13,8 @@ export const findUserByEmail = async ( email, password ) => {
             headers:{
                 'Content-Type':'application/json'
             }
-        }).then( res => {
-            return res.data;
+        }).then( response => {
+            return response;
         }).catch( error => {
             return error.response;
         })

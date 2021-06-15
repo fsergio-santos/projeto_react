@@ -15530,5 +15530,18 @@ img:hover {
   text-align: center;
 }
 
+.linkHeader {
+  float:right; 
+  padding-top: 15px; 
+  padding-right: 40px; 
+  color: #fff; 
+}
+
+.linkLogout {
+  float:right; 
+  padding-top: 15px; 
+  color: #212529; 
+  text-decoration: none;
+}
 
 

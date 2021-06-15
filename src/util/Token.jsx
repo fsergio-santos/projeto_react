@@ -1,9 +1,8 @@
 
 export const setUsuario = ( usuario ) => {
-    console.log(usuario);
-    localStorage.setItem('token',usuario.token);
-    localStorage.setItem('username',usuario.usernamne);
-    localStorage.setItem('email',usuario.email);
+    localStorage.setItem('token',usuario.data.token);
+    localStorage.setItem('username',usuario.data.usernamne);
+    localStorage.setItem('email',usuario.data.email);
 }
 
 export const getToken = () => {
