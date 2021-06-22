@@ -8,6 +8,11 @@ import { findAllUsers, findUserByName } from "../service/UsuarioService";
 import Paginacao from "../components/templates/Paginacao";
 import Nav from "../components/templates/Nav";
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import Alert from '../components/templates/Alert';
+
+import { getShowMensagem  } from "../store/actions/mensagemActions";
 
 const headers = [
   {nome:"Foto", field:"foto", sort:false},
@@ -94,8 +99,17 @@ class ListaUsuario extends Component {
     }
   }
 
+  showMensagem(){
+
+  }
+
   render() {
     const { usuarios, pageSize, paginaAtual, paginaFim, totalCount } = this.state;
+
+    console.log(this.props.mensagem.alert);
+
+    const { mensagem, opcao, show } = this.props.mensagem.alert;
+
     return (
       <Fragment>
         <section>
@@ -103,9 +117,11 @@ class ListaUsuario extends Component {
           <div className="container">
 
             <Cabecalho path="/" tituloPagina="Listagem de Usuários" tituloPesquisa="Menu Principal"/>
-  
+
             <div className="col-xs-12 col-sm-12 col-md-12">
-              <div></div>
+              { show && 
+                <Alert mensagem={mensagem} success={opcao} showAlert={this.showMensagem.bind(this)}/>
+              }
             </div>
             <div className="tile">
               <div className="tile-body">
@@ -175,4 +191,7 @@ class ListaUsuario extends Component {
   }
 }
 
-export default ListaUsuario;
+const mapStateToProps = state => ({ mensagem : state.mensagensReducer }) 
+const mapDispatchToProps = dispatch => bindActionCreators({getShowMensagem}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListaUsuario);

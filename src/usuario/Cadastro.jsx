@@ -17,6 +17,12 @@ import CadastrarRoles from "./CadastrarRoles";
 import MensagemErro from "../components/templates/MensagemErro";
 
 
+import { setShowMensagem } from '../store/actions/mensagemActions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+
+
 class CadastroUsuario extends Component {
   constructor(props) {
     super(props);
@@ -210,9 +216,9 @@ class CadastroUsuario extends Component {
 
   handleSubmitUsuario = (e) => {
     e.preventDefault();
-    if (this.validarUsuario() === false) {
+   // if (this.validarUsuario() === false) {
       this.salvarUsuario();
-    }
+  //  }
   };
 
   async salvarUsuario() {
@@ -263,6 +269,7 @@ class CadastroUsuario extends Component {
       }
 
      const data = await createUser(usuario);
+     this.props.setShowMensagem('Usuário cadastrado com sucesso!', 'success', true);
 
      if ( data.status === 400 ) {
           const state = validUserFromSever( this.state, data );
@@ -305,6 +312,8 @@ class CadastroUsuario extends Component {
       }
 
       const data = updateUser(usuario);
+      this.props.setShowMensagem('Usuário alterado com sucesso!', 'success', true);
+
       if ( data.status === 400 ) {
             const state = validUserFromSever( this.state, data );
             toReturn = state.toReturn;
@@ -628,4 +637,7 @@ class CadastroUsuario extends Component {
   }
 }
 
-export default CadastroUsuario;
+const mapStateToProps = state => ({ mensagem : state.mansagensReducers });
+const mapDispatchToProps = dispatch => bindActionCreators({setShowMensagem},dispatch);
+
+export default connect(mapStateToProps,mapDispatchToProps)(CadastroUsuario);

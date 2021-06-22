@@ -77,6 +77,9 @@ class Login extends React.Component {
       this.state;
     return (
       <React.Fragment>
+        <section className="material-half-bg">
+          <div className="cover"></div>
+        </section>
         <section className="login-content">
           <div className="logo">
             <h1>Financeiro</h1>
